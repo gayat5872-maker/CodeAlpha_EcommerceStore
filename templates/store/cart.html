@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Shopping Cart{% endblock %}
+{% block content %}
+<h1>Shopping Cart</h1>
+{% if items %}
+<table><tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr>
+{% for item in items %}<tr><td>{{ item.product.name }}</td><td>₹{{ item.product.price }}</td>
+<td><form class="qty" method="post" action="{% url 'update_cart' item.product.id %}">{% csrf_token %}<input name="quantity" type="number" min="0" max="{{ item.product.stock }}" value="{{ item.quantity }}"><button>Update</button></form></td>
+<td>₹{{ item.subtotal }}</td><td><a href="{% url 'remove_from_cart' item.product.id %}">Remove</a></td></tr>{% endfor %}
+</table><div class="total">Total: ₹{{ total }}</div>
+<a class="btn" href="{% url 'checkout' %}">Proceed to Checkout</a>
+{% else %}<p>Your cart is empty.</p><a class="btn" href="{% url 'product_list' %}">Shop Now</a>{% endif %}
+{% endblock %}
